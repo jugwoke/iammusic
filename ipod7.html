@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>iPod Interface</title>
+  <style>
+    body {
+      background-color: #222;
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .ipod {
+      width: 300px;
+      height: 500px;
+      background: radial-gradient(circle at center, #999 0%, #555 100%);
+      border-radius: 30px;
+      box-shadow: 0 0 20px #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .screen {
+      background-color: white;
+      height: 40%;
+      width: 88%;
+      margin-top: 20px;
+      padding: 20px;
+      box-sizing: border-box;
+      border-radius: 25px;
+      box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.3);
+      border: 5px solid #555;
+      overflow-y: auto;
+    }
+
+    .menu-option {
+      padding: 8px;
+      margin: 4px 0;
+      border-radius: 5px;
+    }
+
+    .selected {
+      background-color: #222;
+      color: white;
+    }
+
+    /* Enlarged clickwheel */
+    .clickwheel {
+      flex: 1;
+      width: 100%; /* Set the width to span the entire container */
+      height: 180px; /* Increased height for the clickwheel */
+      background: transparent; /* Inherit the ipod background */
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .wheel-button {
+      position: absolute;
+      background: transparent;
+      border: none;
+      font-size: 16px;
+      color: white;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /* Circular clickwheel background */
+    .clickwheel-circle {
+      position: absolute;
+      width: 160px; /* Increased size */
+      height: 160px; /* Increased size */
+      border-radius: 50%;
+      border: 4px solid #666;
+      background: rgba(0, 0, 0, 0.3); /* Slight dark transparent background */
+    }
+
+    .center-button {
+      background-color: #eee;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Position of the arrow buttons on the clickwheel (on the edges) */
+    .up {
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .down {
+      bottom: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .left {
+      left: 80px; /* Moved the left arrow right */
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .right {
+      right: 80px; /* Moved the right arrow more to the left */
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="ipod">
+    <div class="screen" id="screen">
+      <!-- Menu items will be injected here -->
+    </div>
+
+    <div class="clickwheel">
+      <!-- Clickwheel circular background -->
+      <div class="clickwheel-circle"></div>
+
+      <!-- Arrows placed on the clickwheel -->
+      <button class="wheel-button up" onclick="navigate(-1)">▲</button>
+      <button class="wheel-button down" onclick="navigate(1)">▼</button>
+      <button class="wheel-button left" onclick="navigate(-1)">◄</button>
+      <button class="wheel-button right" onclick="navigate(1)">►</button>
+      
+      <button class="wheel-button center-button" onclick="selectOption()"></button>
+    </div>
+  </div>
+
+  <script>
+    const options = ["Home", "My Music", "DJ Station", "Explore"];
+    let selected = 0;
+    const screen = document.getElementById("screen");
+
+    function renderMenu() {
+      screen.innerHTML = options.map((opt, i) =>
+        `<div class="menu-option ${i === selected ? 'selected' : ''}" onclick="selectOption(${i})">${opt}</div>`
+      ).join('');
+    }
+
+    function navigate(direction) {
+      selected = (selected + direction + options.length) % options.length;
+      renderMenu();
+    }
+
+    function selectOption() {
+      if (selected === 0) {
+        window.location.href = "iammusic-home-new.jpg"; // Redirect to "Home"
+      } else if (selected === 1) {
+        window.location.href = "iammusic-mymusic-new.jpg"; // Redirect to "My Music"
+      } else if (selected === 2) {
+        window.location.href = "iammusic-djaypro-new.pdf"; // Redirect to "DJ Station"
+      } else if (selected === 3) {
+        window.location.href = "iammusic-explore2-new.pdf"; // Redirect to "Explore"
+      } else {
+        const selectedOption = options[selected].toLowerCase().replace(" ", "-");
+        window.location.href = `${selectedOption}.html`;
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === "ArrowUp") navigate(-1);
+      if (e.key === "ArrowDown") navigate(1);
+      if (e.key === "ArrowLeft") navigate(-1);
+      if (e.key === "ArrowRight") navigate(1);
+      if (e.key === "Enter") selectOption();
+    });
+
+    renderMenu();
+  </script>
+
+</body>
+
+</html>
